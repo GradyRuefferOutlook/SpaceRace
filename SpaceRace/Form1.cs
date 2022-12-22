@@ -15,7 +15,10 @@ namespace SpaceRace
 {
     public partial class Form1 : Form
     {
+        //Set the spin cooldown
         int cooldownTime = 25;
+
+        //Initialize Spin Class
         public class rocketSpin
         {
             public int spinTime;
@@ -23,6 +26,7 @@ namespace SpaceRace
             public String direction;
         }
 
+        //Set up blue rocket
         Rectangle rocketBlue = new Rectangle();
         Rectangle rocketBlueStartingPosition = new Rectangle();
         int rocketBlueSize = 15;
@@ -35,6 +39,7 @@ namespace SpaceRace
 
         rocketSpin rocketBlueSpin = new rocketSpin();
 
+        //Set up red rocket
         Rectangle rocketRed = new Rectangle();
         Rectangle rocketRedStartingPosition = new Rectangle();
         int rocketRedSize = 15;
@@ -47,6 +52,7 @@ namespace SpaceRace
 
         rocketSpin rocketRedSpin = new rocketSpin();
 
+        //Check keypress
         bool wDown = false;
         bool aDown = false;
         bool sDown = false;
@@ -60,14 +66,17 @@ namespace SpaceRace
         bool upDown = false;
         bool downDown = false;
 
+        //Set spin time
         int spinTime = 10;
 
+        //Set Move Holders
         int moveHolderRocketBlueX = 0;
         int moveHolderRocketBlueY = 0;
 
         int moveHolderRocketRedX = 0;
         int moveHolderRocketRedY = 0;
 
+        //Set Orientations
         int rocketBlueOrientation = 1;
         bool rocketBlueOrientPositive = true;
 
@@ -77,20 +86,25 @@ namespace SpaceRace
         Image[] p1Orient = new Image[29];
         Image[] p2Orient = new Image[29];
 
+        //Hold hits
         bool rocketRedHit = false;
         bool rocketBlueHit = false;
 
+        //Set max spawns (I know there's a typo)
         int maxSpwanPerTick = 15;
 
+        //Track Score
         int redScore = 0;
         int blueScore = 0;
 
+        //Set Up Sounds
         SoundPlayer USA = new SoundPlayer(Properties.Resources.UnitedStates);
         SoundPlayer Soviet = new SoundPlayer(Properties.Resources.Soviet);
         SoundPlayer hit = new SoundPlayer(Properties.Resources.Hit);
         SoundPlayer thrust = new SoundPlayer(Properties.Resources.Thrusters);
         SoundPlayer JFK = new SoundPlayer(Properties.Resources.JFK);
 
+        //Help with sounds being played
         bool played = false;
 
         //Set Up Objects
@@ -121,11 +135,13 @@ namespace SpaceRace
         public Form1()
         {
             InitializeComponent();
+            //Initialize p1 and p2
             rocketBlue = new Rectangle(rocketBlueSize * 10, (this.Height / 2) - (rocketBlueSize), 35, 50);
             rocketRed = new Rectangle(this.Width - rocketRedSize * 10, (this.Height / 2) - (rocketRedSize), 35, 50);
             rocketBlueStartingPosition = new Rectangle(rocketBlueSize * 10, (this.Height / 2) - (rocketBlueSize), 35, 50);
             rocketRedStartingPosition = new Rectangle(this.Width - rocketRedSize * 10, (this.Height / 2) - (rocketRedSize), 35, 50);
 
+            //Initialize animations
             p1Orient[0] = Properties.Resources._1_1;
             p1Orient[1] = Properties.Resources._1_2;
             p1Orient[2] = Properties.Resources._1_3;
@@ -279,9 +295,11 @@ namespace SpaceRace
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            //Move Players
             p1.Location = new Point(rocketBlue.X, rocketBlue.Y);
             p2.Location = new Point(rocketRed.X, rocketRed.Y);
 
+            //Paint Projectiles
             for (int i = 0; i < projectileList.Count; i++)
             {
                 e.Graphics.FillPie(new SolidBrush(Color.FromArgb(255, projectileList[i].r, projectileList[i].g, projectileList[i].b)), projectileList[i].area, rnd.Next(0, 360), rnd.Next(0, 360));
@@ -292,24 +310,30 @@ namespace SpaceRace
                 e.Graphics.FillPie(new SolidBrush(Color.FromArgb(255, projectileCollisionList[i].r, projectileCollisionList[i].g, projectileCollisionList[i].b)), projectileCollisionList[i].area, rnd.Next(0, 360), rnd.Next(0, 360));
             }
 
+            //Draw Mid Line
             e.Graphics.DrawLine(new Pen(Color.Purple, 10), new Point(this.Width / 2, 0), new Point(this.Width / 2, this.Height));
 
+            //Draw Status Bars
             if (rocketBlueHit == false)
             {
                 e.Graphics.FillRectangle(new SolidBrush(Color.Purple), new Rectangle(0, this.Height - p1.Height * 2, this.Width / 2, p1.Height * 2));
+                rocketBlueOrientPositive = true;
             }
             else if (rocketBlueHit == true)
             {
                 e.Graphics.FillRectangle(new SolidBrush(Color.Red), new Rectangle(0, this.Height - p1.Height * 2, this.Width / 2, p1.Height * 2));
+                rocketBlueOrientPositive = false;
             }
 
             if (rocketRedHit == false)
             {
                 e.Graphics.FillRectangle(new SolidBrush(Color.Purple), new Rectangle(this.Width / 2, this.Height - p1.Height * 2, this.Width / 2, p1.Height * 2));
+                rocketRedOrientPositive = false;
             }
             else if (rocketRedHit == true)
             {
                 e.Graphics.FillRectangle(new SolidBrush(Color.Red), new Rectangle(this.Width / 2, this.Height - p1.Height * 2, this.Width / 2, p1.Height * 2));
+                rocketRedOrientPositive = true;
             }
         }
 
@@ -711,6 +735,7 @@ namespace SpaceRace
                 }
             }
 
+            //If projectiles are low, Spawn
             if (projectileList.Count < 5)
             {
                 SpawnObject();
@@ -911,6 +936,7 @@ namespace SpaceRace
                 }
             }
 
+            //Change the values of a Collision Projectile
             for (int i = 0; i < projectileCollisionList.Count; i++)
             {
                 Projectiles projectileStorer = projectileCollisionList[i];
@@ -1129,6 +1155,7 @@ namespace SpaceRace
                 }
             }
 
+            //Check for Score 
             if (rocketBlue.Y < 0 && rocketBlueHit == false)
             {
                 rocketBlueHit = true;
@@ -1143,6 +1170,7 @@ namespace SpaceRace
                 redScore++;
             }
 
+            //Update Score
             p1ScoreLabel.Text = $"{blueScore}";
             p2ScoreLabel.Text = $"{redScore}";
 
@@ -1151,10 +1179,12 @@ namespace SpaceRace
 
         public void SpawnObject()
         {
+            //Determine Random Spawn
             int spawnRate = rnd.Next(0, maxSpwanPerTick + 2);
             for (int i = 1; i <= spawnRate; i++)
             {
-                //Ints for changing spwan limits
+                //Determine Limits
+                //Ints for changing spawn limits
                 int maxSpeed = 5 + 1;
                 int maxBounce = 5 + 1;
 
@@ -1191,6 +1221,7 @@ namespace SpaceRace
                 int projectileWidth = rnd.Next(minWidth, maxWidth);
                 int projectileHeight = rnd.Next(minHeight, maxHeight);
 
+                //Genrate Projectile based on Y direction
                 if (directionY == true)
                 {
                     Rectangle generator = new Rectangle(0, rnd.Next(0, this.Height - projectileHeight - (p1.Height * 5)), projectileWidth, projectileHeight);
@@ -1227,9 +1258,11 @@ namespace SpaceRace
 
         public void SpawnCollisionObject(int x, int y)
         {
+            //Spawn random number of projectiles
             int spawnRate = rnd.Next(0, 10);
             for (int i = 1; i <= spawnRate; i++)
             {
+                //Determine proper Limits
                 //Ints for changing spwan limits
                 int maxSpeed = 5 + 1;
                 int maxBounce = 1;
@@ -1267,6 +1300,7 @@ namespace SpaceRace
                 int projectileWidth = rnd.Next(minWidth, maxWidth);
                 int projectileHeight = rnd.Next(minHeight, maxHeight);
 
+                //Generate Projectile Based on Y direction
                 if (directionY == true)
                 {
                     Rectangle generator = new Rectangle(x, y, projectileWidth, projectileHeight);
@@ -1319,6 +1353,7 @@ namespace SpaceRace
         {
             if (gameStarter.Tag == "0")
             {
+                //Play intro Sound
                 if (played == false)
                 {
                     JFK.Load();
@@ -1326,9 +1361,12 @@ namespace SpaceRace
                     played = true;
                 }
 
+                //Show or Hide Elements
                 startPrompt.Text = "SPACE RACE\r\n\r\n:PRESS ENTER TO PLAY:\r\n\r\n:ESC TO EXIT:";
+
                 p1ScoreLabel.Parent = this;
                 p2ScoreLabel.Parent = this;
+
                 if (startEndBack.Visible == false)
                 {
                     startEndBack.Visible = true;
@@ -1378,8 +1416,11 @@ namespace SpaceRace
             }
             else if (gameOperator.Tag == "0")
             {
+                //Load Sounds
                 thrust.Load();
                 hit.Load();
+
+                //Activate, Show, or Hide Elements
                 if (gameTimeCounter.IsRunning == false)
                 {
                     gameTimeCounter.Start();
@@ -1424,12 +1465,14 @@ namespace SpaceRace
             }
             else if (gameEnder.Tag == "0")
             {
+                //Activate, Show, or Hide Elements
                 if (gameTimeCounter.IsRunning == true)
                 {
                     gameTimeCounter.Stop();
                 }
 
                 startPrompt.Text = "SPACE RACE\r\n\r\n:PRESS ENTER TO PLAY:\r\n\r\n:ESC TO EXIT:";
+
                 if (startPrompt.Visible == false)
                 {
                     startPrompt.Visible = true;
@@ -1455,6 +1498,7 @@ namespace SpaceRace
                     gameWinnerLabel.Visible = true;
                 }
 
+                //Display Winner
                 if (redScore > blueScore)
                 {
                     gameWinnerLabel.Text = "THE SOVIETS WIN THE SPACE RACE";
@@ -1478,6 +1522,7 @@ namespace SpaceRace
                     gameWinnerLabel.Text = "IT'S A TIE";
                 }
 
+                //Allow for repeat or exit
                 if (enterDown == true)
                 {
                     gameEnder.Tag = "1";
@@ -1491,14 +1536,17 @@ namespace SpaceRace
             }
             else
             {
+                //Reset Operator
                 gameStarter.Tag = "0";
                 gameOperator.Tag = "0";
                 gameEnder.Tag = "0";
+                played = false;
             }
         }
 
         private void gameStarter_Tick(object sender, EventArgs e)
         {
+            //Allow for Start or Exit
             if (enterDown == true)
             {
                 played = false;
