@@ -1458,7 +1458,7 @@ namespace SpaceRace
 
                 timeDisplay.Text = $"{gameTimeCounter.Elapsed}";
 
-                if (gameTimeCounter.ElapsedMilliseconds > 10000)
+                if (gameTimeCounter.ElapsedMilliseconds > 150000)
                 {
                     gameOperator.Tag = "1";
                 }
